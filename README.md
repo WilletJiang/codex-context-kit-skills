@@ -24,7 +24,7 @@ Designed to pair well with Codex CLI, but usable standalone.
 ## Install (macOS/Linux, bash/zsh)
 
 ```sh
-git clone https://github.com/WilletJiang/codex-context-kit.git
+git clone https://github.com/WilletJiang/codex-context-kit-skills.git
 cd codex-context-kit
 ./install.sh
 ```
