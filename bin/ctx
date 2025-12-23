@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PY="${PYTHON:-python3}"
+BIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CODEX_HOME="${CODEX_HOME:-$(cd "${BIN_DIR}/.." && pwd)}"
+SCRIPT="${CODEX_HOME}/skills/ctx/scripts/ctx.py"
+
+# Defaults: tuned for "bounded, high-signal context".
+DEFAULT_ARGS=(
+  --scope
+  --scope-lookback 200
+  -C 3
+  --max-hits 60
+  --max-files 20
+  --max-output-lines 500
+)
+
+ARGS=()
+NO_SCOPE=0
+for a in "$@"; do
+  if [[ "$a" == "--no-scope" ]]; then
+    NO_SCOPE=1
+  fi
+done
+
+if [[ $NO_SCOPE -eq 1 ]]; then
+  for a in "${DEFAULT_ARGS[@]}"; do
+    if [[ "$a" == "--scope" ]]; then
+      continue
+    fi
+    ARGS+=("$a")
+  done
+else
+  ARGS+=("${DEFAULT_ARGS[@]}")
+fi
+
+exec "$PY" "$SCRIPT" "${ARGS[@]}" "$@"

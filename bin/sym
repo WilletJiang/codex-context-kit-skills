@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PY="${PYTHON:-python3}"
+BIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CODEX_HOME="${CODEX_HOME:-$(cd "${BIN_DIR}/.." && pwd)}"
+SCRIPT="${CODEX_HOME}/skills/sym/scripts/sym.py"
+
+# Defaults: bounded output, module paths computed relative to CWD (repo root).
+DEFAULT_ARGS=(
+  --max-results 500
+)
+
+exec "$PY" "$SCRIPT" "${DEFAULT_ARGS[@]}" "$@"

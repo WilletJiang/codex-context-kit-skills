@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PY="${PYTHON:-python3}"
+BIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CODEX_HOME="${CODEX_HOME:-$(cd "${BIN_DIR}/.." && pwd)}"
+SCRIPT="${CODEX_HOME}/skills/def/scripts/def.py"
+
+# Defaults: keep results small and actionable.
+DEFAULT_ARGS=(
+  --max-results 30
+  --max-hits 120
+)
+
+exec "$PY" "$SCRIPT" "${DEFAULT_ARGS[@]}" "$@"

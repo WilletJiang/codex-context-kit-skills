@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PY="${PYTHON:-python3}"
+BIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CODEX_HOME="${CODEX_HOME:-$(cd "${BIN_DIR}/.." && pwd)}"
+SCRIPT="${CODEX_HOME}/skills/repo_facts/scripts/repo_facts.py"
+
+# Defaults: include a bounded tree for instant orientation.
+DEFAULT_ARGS=(
+  --tree
+  --tree-depth 2
+  --tree-max-entries 30
+  --tree-max-nodes 800
+)
+
+NO_TREE=0
+for a in "$@"; do
+  if [[ "$a" == "--no-tree" ]]; then
+    NO_TREE=1
+  fi
+done
+
+ARGS=()
+if [[ $NO_TREE -eq 1 ]]; then
+  # Strip our pseudo-flag so repo_facts.py doesn't error.
+  for a in "$@"; do
+    if [[ "$a" == "--no-tree" ]]; then
+      continue
+    fi
+    ARGS+=("$a")
+  done
+  exec "$PY" "$SCRIPT" "${ARGS[@]}"
+fi
+
+exec "$PY" "$SCRIPT" "${DEFAULT_ARGS[@]}" "$@"
